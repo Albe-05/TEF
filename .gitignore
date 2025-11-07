@@ -1,0 +1,7 @@
+/node_modules
+*.log
+/assets
+/uploads
+/frames
+/outputs
+.env
