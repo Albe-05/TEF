@@ -5,3 +5,4 @@
 /frames
 /outputs
 .env
+ecosystem.config.cjs
