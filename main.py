@@ -1,5 +1,6 @@
 import contextlib
 import os
+import shutil
 import sys
 from pathlib import Path
 
@@ -36,14 +37,33 @@ class _SilentLogger:
 
 def youtubeCookies():
 
-    if os.path.exists("/etc/secrets/youtube_cookies.txt"):
-        writer("youtube cookies in env")
-        return "/etc/secrets/youtube_cookies.txt"
-    elif os.path.exists("youtube_cookies.txt"):
-        writer("youtube cookies in cwd")
-        return "youtube_cookies.txt"
+    dst = "/tmp/youtube_cookies.txt"
+
+    if os.path.exists(dst):
+        return dst
     else:
-        return None
+        if os.path.exists("/etc/secrets/youtube_cookies.txt"):
+            writer("youtube cookies in env")
+
+            src = "/etc/secrets/youtube_cookies.txt"
+
+            shutil.copyfile(src, dst)
+            os.chmod(dst, 0o600)
+
+            return dst
+
+        elif os.path.exists("youtube_cookies.txt"):
+            writer("youtube cookies in cwd")
+
+            src = "youtube_cookies.txt"
+
+            shutil.copyfile(src, dst)
+            os.chmod(dst, 0o600)
+
+            return dst
+
+        else:
+            return None
 
 
 def download_song(query: str) -> str:
