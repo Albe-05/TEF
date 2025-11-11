@@ -231,8 +231,10 @@ async function callPythonSelector(songArtistStr) {
     ps.stdout.on('data', d => out += d.toString());
     ps.stderr.on('data', d => err += d.toString());
     ps.on('close', code => {
+      log(out)
+      log(err)
       if (code === 0) resolve(out.trim());
-      else reject(new Error(`Python exited with code ${code}, ${err}`));
+      else reject(new Error(err || `Python exited with code ${code}`));
     });
   });
 }
