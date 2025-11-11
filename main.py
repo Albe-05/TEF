@@ -36,13 +36,11 @@ class _SilentLogger:
 
 def youtubeCookies():
 
-    
-
     if os.path.exists("/etc/secrets/youtube_cookies.txt"):
-        writer('youtube cookies in env')
+        writer("youtube cookies in env")
         return "/etc/secrets/youtube_cookies.txt"
     elif os.path.exists("youtube_cookies.txt"):
-        writer('youtube cookies in cwd')
+        writer("youtube cookies in cwd")
         return "youtube_cookies.txt"
     else:
         return None
