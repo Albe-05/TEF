@@ -133,6 +133,10 @@ def main():
         writer(str(e))
         writer(str(e.args))
         writer(str(e.with_traceback(None)))
+        
+        print(str(e))
+        print(str(e.args))
+        print(str(e.with_traceback(None)))
         sys.exit(1)
 
 
