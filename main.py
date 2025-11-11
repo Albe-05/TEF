@@ -5,20 +5,21 @@ from pathlib import Path
 
 import yt_dlp
 
-os.environ['PYTHONIOENCODING'] = 'utf-8'
+os.environ["PYTHONIOENCODING"] = "utf-8"
 
 if not os.path.exists("python.log"):
     # Create the file
     with open("python.log", "w") as f:
         f.write("")  # optionally write something
 
+
 # FIXME: remove this in production
 def writer(s):
-    with open("python.log", "a", encoding='utf-8') as f:
+    with open("python.log", "a", encoding="utf-8") as f:
         try:
             f.write(s + "\n")
         except UnicodeEncodeError:
-            f.write('UnicodeEncodeError\n')
+            f.write("UnicodeEncodeError\n")
 
 
 class _SilentLogger:
@@ -31,6 +32,17 @@ class _SilentLogger:
     def error(self, msg):
         # Suppress errors to keep no-output requirement; exit code will signal failure.
         writer(msg)
+
+
+def youtubeCookies():
+
+    COOKIE_PATH = "/etc/secrets/youtube_cookies.txt"
+
+    if os.path.exists(COOKIE_PATH):
+        writer('youtube cookies in env')
+        return COOKIE_PATH
+    else:
+        return None
 
 
 def download_song(query: str) -> str:
@@ -66,8 +78,12 @@ def download_song(query: str) -> str:
         # Optional: wait a bit between retries to avoid rate limits
         "retry_sleep": 2,  # seconds
         # safe filenames
-        'restrictfilenames': True,
+        "restrictfilenames": True,
     }
+
+    cookies_path = youtubeCookies()
+    if cookies_path:
+        ydl_opts["cookiefile"] = cookies_path
 
     # Build a search URL that returns the single best match.
     search_url = f"ytsearch1:{query}"
@@ -133,7 +149,7 @@ def main():
         writer(str(e))
         writer(str(e.args))
         writer(str(e.with_traceback(None)))
-        
+
         print(str(e))
         print(str(e.args))
         print(str(e.with_traceback(None)))

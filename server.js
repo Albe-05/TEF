@@ -110,7 +110,7 @@ function deleteOldFiles(dir, maxAgeMs = ONE_HOUR) {
     }
   } catch { }
 }
-setInterval(() => { try { deleteOldFiles(uploadsDir); deleteOldFiles(framesDir); deleteOldFiles(outputsDir); deleteOldFiles(assetsDir);} catch { } }, 10 * 60 * 1000);
+setInterval(() => { try { deleteOldFiles(uploadsDir); deleteOldFiles(framesDir); deleteOldFiles(outputsDir); deleteOldFiles(assetsDir); } catch { } }, 10 * 60 * 1000);
 
 async function getVideoDuration(filePath) {
   return new Promise((resolve, reject) => {
@@ -280,12 +280,12 @@ app.post('/api/process', upload.single('video'), async (req, res) => {
 
     const id = uuidv4();
     const workPrefix = path.join(framesDir, id);
-    
+
     const contactPath = path.join(framesDir, `${id}-contact.png`);
     const outVideoPath = path.join(outputsDir, `${id}.mp4`);
 
     const N = 9;
-    
+
     // Duration & timestamps
     const duration = await getVideoDuration(vidFile.path);
     if (!duration || !isFinite(duration) || duration <= 0) throw new Error('Could not read video duration.');
@@ -305,10 +305,6 @@ app.post('/api/process', upload.single('video'), async (req, res) => {
 
     // Build 3x3 contact sheet
     await makeContactSheet(framePaths, contactPath);
-
-
-
-    
 
     // Ask Gemini for song string + start
     const { song_artist, start_seconds } = await askGeminiForSong(contactPath);
@@ -330,7 +326,6 @@ app.post('/api/process', upload.single('video'), async (req, res) => {
 
     // in /api/process, right AFTER successful mux and BEFORE res.json(...)
     const processed_count = incrementCounter();
-    
 
     res.json({
       processed_count,
